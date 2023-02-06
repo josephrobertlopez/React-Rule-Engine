@@ -7,18 +7,16 @@ Simple Rule Engine written in the React framework. The app leverages the [Vite](
 - npm
 
 ## Installation
+To install the application the following may be ran.
+
 ```Bash
 # Install dependencies and dev dependencies
 npm install
-# Install vitest and save as dev dependency
-npm install vitest --save-dev
-# Install jsdom and save as dev dependency
-npm install jsdom --save-dev
-# Install react-testing-library and save as dev dependency
-npm install @testing-library/react @testing-library/jest-dom --save-dev
 ```
 
 ## Usage
+To run a dev instance of the app, run the following.
+
 ```Bash
 npm run dev
 ```
