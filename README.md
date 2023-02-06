@@ -1,6 +1,6 @@
 # React-Rule-Engine
 
-Simple Rule Engine written in the React framework. The app leverages the [Vite](https://vitejs.dev/guide/#trying-vite-online) build tool. For testing, the app leverages the vitest framework. jsdom is leveraged to render the HTML in a headless browser environment.  
+Simple Rule Engine written in the React framework. The app leverages the [Vite](https://vitejs.dev/guide/#trying-vite-online) build tool. 
 
 ## Requirements
 - node
@@ -23,6 +23,8 @@ npm install @testing-library/react @testing-library/jest-dom --save-dev
 npm run dev
 ```
 ## Testing
+For testing, the app leverages the vitest framework. jsdom is leveraged to render the HTML in a headless browser environment. 
+
 ```Bash
 npm run test
 ```
