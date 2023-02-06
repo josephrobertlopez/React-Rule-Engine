@@ -7,23 +7,22 @@ Simple Rule Engine written in the React framework. The app leverages the [Vite](
 - npm
 
 ## Installation
-To install the application the following may be ran.
-
 ```Bash
 # Install dependencies and dev dependencies
 npm install
 ```
 
 ## Usage
-To run a dev instance of the app, run the following.
-
 ```Bash
+# Run dev instance
 npm run dev
 ```
+
 ## Testing
 For testing, the app leverages the vitest framework. jsdom is leveraged to render the HTML in a headless browser environment. The React Testing Library is leveraged for component tests. 
 
 ```Bash
+# Run tests
 npm run test
 ```
 ## License
