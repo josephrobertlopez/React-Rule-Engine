@@ -21,7 +21,7 @@ To run a dev instance of the app, run the following.
 npm run dev
 ```
 ## Testing
-For testing, the app leverages the vitest framework. jsdom is leveraged to render the HTML in a headless browser environment. 
+For testing, the app leverages the vitest framework. jsdom is leveraged to render the HTML in a headless browser environment. The React Testing Library is leveraged for component tests. 
 
 ```Bash
 npm run test
