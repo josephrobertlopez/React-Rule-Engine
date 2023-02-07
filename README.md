@@ -25,6 +25,18 @@ For testing, the app leverages the vitest framework. jsdom is leveraged to rende
 # Run tests
 npm run test
 ```
+
+## Rule
+A rule is as an arithmetic inequality. The encoding of a rule is as follows:
+- condition: 
+    - arithmetic inequality awaiting input variables
+- consequence:
+    - output statement as a string awaiting input variables
+    - returned when condition is false
+- alternative:
+    - output statement as a string awaiting input variables
+    - returned when condition is false
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
