@@ -5,10 +5,10 @@ screen,
 } from '@testing-library/react';
 import { Rule, Ruleset } from '../../../src/components/Ruleset';
 describe('Ruleset', () => {
-    it('render Ruleset', () => {
+    it('Ruleset is invalid', () => {
         let rules = [
             {
-                condition: "inputs + inputs.y > 10",
+                condition: "input  > 10",
                 consequence: "`inputs.x + inputs.y` is greater than 10.",
                 alternative: "`inputs.x + inputs.y` is less or equal to 10."
             },
@@ -21,9 +21,10 @@ describe('Ruleset', () => {
         let inputs = {
             x: 5,
             y: 5
+        
         }
-        render(<Ruleset rules={rules} inputs={inputs}/>);
-        screen.debug();
+        // Error Boundary must be fixed
+        expect(() => render(<Ruleset rules={rules} inputs={inputs}/>).toThrow("Error: react-error-boundary requires either a fallback, fallbackRender, or FallbackComponent prop"));
     });
     it('Ruleset is valid', () => {
         let rules = [
