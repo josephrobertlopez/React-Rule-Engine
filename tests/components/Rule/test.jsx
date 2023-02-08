@@ -15,7 +15,7 @@ describe('Rule',() =>{
             x:5.5,
             y: 4,
         };    
-        expect(() => render(<Rule rule={rule} inputs={inputs} />).toThrow("Error: Error evaluating expression: Invalid Expression"));        
+        expect(() => render(<Rule rule={rule} inputs={inputs} />).toThrow("Error: Error rendering Rule: Error evaluating expression: Invalid Expression"));        
     });
     it('Rule produced consequence', () =>{
         let rule = {

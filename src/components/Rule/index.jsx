@@ -1,12 +1,25 @@
 import * as React from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
-const Rule = ({rule: {condition, consequence, alternative}, inputs}) => {
-  try{  
-    condition = parseExpression(condition,inputs);
-    consequence = parseExpression(consequence,inputs);
-    alternative = parseExpression(alternative,inputs);
-    return <>{evaluateExpression(condition) ? consequence : alternative}</>;
-  }catch(error){
+const Rule = ({ rule: { condition, consequence, alternative }, inputs }) => (
+  <ErrorBoundary fallback={FallbackComponent}>
+    {parseAndEvaluateRule(condition, consequence, alternative, inputs)}
+  </ErrorBoundary>
+);
+
+const FallbackComponent = ({ error }) => (
+  <div>Error in rendering rule: {error.message}</div>
+);
+
+const parseAndEvaluateRule = (condition, consequence, alternative, inputs) => {
+  try {
+    const parsedCondition = parseExpression(condition, inputs);
+    const parsedConsequence = parseExpression(consequence, inputs);
+    const parsedAlternative = parseExpression(alternative, inputs);
+    const evaluatedCondition = evaluateExpression(parsedCondition, inputs);
+
+    return evaluatedCondition ? parsedConsequence : parsedAlternative;
+  } catch (error) {
     throw new Error(`Error rendering Rule: ${error.message}`);
   }
 };
@@ -14,26 +27,18 @@ const Rule = ({rule: {condition, consequence, alternative}, inputs}) => {
 const parseExpression = (expression, inputs) => {
   // Replace input references with actual values
   for (const key in inputs) {
-    expression = expression.replace(`inputs.${key}`, inputs[key]);
+    expression = expression.replace(new RegExp(`inputs.${key}`, 'g'), inputs[key]);
   }
   return expression;
 };
 
-const evaluateExpression = (expression) => {
-  try{
-  // Only allow arithmetic inequalites 
-  const allowedChars = ['.',' ','0','1','2','3','4','5','6','7','8','9','+','-','*','/','<','=','>'];
-    for (let i = 0; i < expression.length; i++) {
-      if (!allowedChars.includes(expression[i])) {
-        console.log(expression);
-        throw new Error("Invalid Expression");
-      }
-  
-    const evaluate = new Function(`return ${expression}`);
-    const result = evaluate();
-    return result > 0;
-  }}catch(error){
+const evaluateExpression = (expression, inputs) => {
+  try {
+    const evaluate = new Function(...Object.keys(inputs), `return ${expression}`);
+    return evaluate(...Object.values(inputs));
+  } catch (error) {
     throw new Error(`Error evaluating expression: ${error.message}`);
   }
 };
-export {Rule}
+
+export { Rule };
