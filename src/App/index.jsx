@@ -2,64 +2,57 @@ import * as React from 'react';
 import { Ruleset } from "../components/Ruleset";
 import {Rule} from "../components/Rule";
 
-const RuleInput = ({ onChange, index }) => (
+const RuleInputField = ({ onChange, index, condition, consequence, alternative }) => (
   <div>
-    <input type="text" placeholder="condition" onChange={e => onChange(e, 'condition', index)} />
-    <input type="text" placeholder="consequence" onChange={e => onChange(e, 'consequence', index)} />
-    <input type="text" placeholder="alternative" onChange={e => onChange(e, 'alternative', index)} />
+    <input type="text" placeholder="condition" onChange={event => onChange(event, 'condition', condition='')} />
+    <input type="text" placeholder="consequence" onChange={event => onChange(event, 'consequence', consequence='')} />
+    <input type="text" placeholder="alternative" onChange={event => onChange(event, 'alternative', alternative='')} />
   </div>
 );
 
-const Input = ({ onChange, index }) => (
+const InputField = ({ onChange, index, inputVariable, inputValue }) => (
   <div>
-    <input type="text" placeholder="input" onChange={event => onChange(event, 'input', index)} />
+    <input type="text" placeholder="input variable" onChange={event => onChange(event, 'inputVariable', index, inputVariable='')} />
+    <input type="text" placeholder="input value" onChange={event => onChange(event,'inputValue', index, inputValue='')}/>
   </div>
 );
 
 const Form = ({ rules, inputs, onRuleChange, onInputChange, onSubmit }) => {
-  const [ruleInputs, setRuleInputs] = React.useState(rules);
-  const [inputValues, setInputValues] = React.useState(inputs);
-
-  const handleRuleChange = (newRuleInputs) => {
-    setRuleInputs(newRuleInputs);
-    onRuleChange(newRuleInputs);
-  };
-
-  const handleInputChange = (newInputValues) => {
-    setInputValues(newInputValues);
-    onInputChange(newInputValues);
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    onSubmit(ruleInputs, inputValues);
+    onSubmit(rules, inputs);
   };
-
   return (
     <form onSubmit={handleSubmit}>
       <div>
         <h3>Rules</h3>
-        {ruleInputs.map((rule, index) => (
-          <RuleInput
+        {rules.map((rule,index) => (
+          <RuleInputField
             key={index}
             index={index}
-            onChange={handleRuleChange}
+            condition={rule.condition}
+            consequence={rule.consequence}
+            alternative={rule.alternative}
+            onChange={onRuleChange}
           />
         ))}
-        <button type="button" onClick={() => handleRuleChange([...ruleInputs, { condition: '', consequence: '', alternative: '' }])}>
+        <button type="button" onClick={() => onRuleChange([...rules, { condition: '', consequence: '', alternative: '' }])}>
           +
         </button>
       </div>
       <div>
         <h3>Inputs</h3>
-        {inputValues.map((input, index) => (
-          <Input
+        {
+        inputs.map((input,index) => (
+          <InputField
             key={index}
             index={index}
-            onChange={handleInputChange}
+            inputVariable={input.inputVariable}
+            inputValue={input.inputValue}
+            onChange={onInputChange}
           />
         ))}
-        <button type="button" onClick={() => handleInputChange([...inputValues, { input: '' }])}>
+        <button type="button" onClick={() => onInputChange([...inputs, { '': '' }])}>
           +
         </button>
       </div>
@@ -69,13 +62,8 @@ const Form = ({ rules, inputs, onRuleChange, onInputChange, onSubmit }) => {
 };
 
 const App = () => {
-  const [rules, setRules] = React.useState([
-    { condition: '', consequence: '', alternative: '' },
-  ]);
-
-  const [inputs, setInputs] = React.useState([
-    { input: '' },
-  ]);
+  const [rules,setRules] = React.useState([ {condition: '', consequence: '', alternative: '' }]);
+  var [inputs,setInputs] = React.useState([{inputVariable:'',inputValue: ''}]);
 
   const handleRuleChange = (newRules) => {
     setRules(newRules);
@@ -85,10 +73,8 @@ const App = () => {
     setInputs(newInputs);
   };
 
-  // const handleSubmit = () => {
-  //   // Submit logic goes here
-  // };
-  const handleSubmit = event => {
+
+  const handleSubmit = (event) => {
     console.log(event);
     onSubmit(rules, inputs);
   };
