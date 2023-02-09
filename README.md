@@ -36,7 +36,27 @@ A rule is as an arithmetic inequality. The encoding of a rule is as follows:
 - alternative:
     - output statement as a string awaiting input variables
     - returned when condition is false
+## UI Wireframe
+```css
+# Rules
+|   Condition   |   Consequence  |   Alternative  |
+|---------------|----------------|----------------|
+|  [input]      |  [input]       |   [input]      |
+|  [input]      |  [input]       |   [input]      |
+|  [input]      |  [input]       |   [input]      |
+|   +           |                |                |
 
+# Inputs
+| Number Variables  |
+|-------------------|
+|  [input]          |
+
+# Submit
+[Submit]
+
+# Evaluation Result
+[Display area for evaluated ruleset result]
+```
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
