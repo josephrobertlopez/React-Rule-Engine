@@ -2,106 +2,94 @@ import * as React from 'react';
 import { Ruleset } from "../components/Ruleset";
 import {Rule} from "../components/Rule";
 
-const RuleField = ({ onChange, condition, consequence, alternative }) => (
+const RuleField = ({ onChange }) => (
   <div>
-    <input type="text" placeholder="condition" value={condition} onChange={event => onChange('condition', event.target.value)} />
-    <input type="text" placeholder="consequence" value={consequence} onChange={event => onChange('consequence', event.target.value)} />
-    <input type="text" placeholder="alternative" value={alternative} onChange={event => onChange('alternative', event.target.value)} />
+    <input type="text" placeholder="condition"  onChange={(event) => {onChange({type:'condition',payload:event.target.value})}} />
+    <input type="text" placeholder="consequence" onChange={(event) => {onChange({type:'consequence',payload:event.target.value})}} />
+    <input type="text" placeholder="alternative" onChange={(event) => {onChange({type:'alternative',payload:event.target.value})}}/>
   </div>
 );
 
-const InputField = ({ onChange, inputVariable, inputValue }) => (
+const InputField = ({ onChange }) => (
   <div>
-    <input type="text" placeholder="input variable" value = {inputVariable} onChange={event => onChange('inputVariable',event.target.value)} />
-    <input type="text" placeholder="input value" value = {inputValue} onChange={event => onChange('inputValue',event.target.value)}/>
+    <input type="text" placeholder="input variable"  onChange={(event) => {onChange({type:'inputVariable',payload:event.target.value})}} />
+    <input type="text" placeholder="input value"  onChange={(event) => {onChange({type:'inputValue',payload:event.target.value})}}/>
   </div>
 );
-const App = () => {
-  const [rule,setRule] = React.useState({condition:'',consequence:'',alternative:''});
-  const [input,setInput] = React.useState({inputVariable:'',inputValue:''});
-  return(
-    <div>
-      <RuleField
-        onChange={setRule}
-        condition={rule.condition}
-        consequence={rule.consequence}
-        alternative={rule.alternative}
+const Form = ({rule,input,onRuleChange, onInputChange}) => {
+   const handleSubmit = (event) => {
+    event.preventDefault();
+    let tmpInput = {};
+    tmpInput[input.inputVariable] = input.inputValue;
+    console.log("Submit!");
+    console.log(
+      <Rule
+        rule={rule}
+        inputs={tmpInput}
       />
-
-      <InputField
-        onChange={setInput}
-        inputVariable={rule.inputVariable}
-        inputValue={rule.inputValue}
-      />
-    </div>
+    )
+    
+  };
+   return(
+    <form onSubmit={handleSubmit}>
+       <div>
+        <RuleField
+          onChange={onRuleChange}
+          condition={rule.condition}
+          consequence={rule.consequence}
+          alternative={rule.alternative}
+        />
+        <InputField
+          onChange={onInputChange}
+          inputVariable={input.inputVariable}
+          inputValue={input.inputValue}
+        />
+      <button type="submit">Submit</button>
+      </div>
+    </form>
+     
   )
 }
+const App = () => {
 
+  const initialRuleState = {condition:'',consequence:'',alternative:''};  
+  const initialInputState = {inputVariable:'',inputValue:''}
 
-// const Form = ({ rules, inputs, onRuleChange, onInputChange, onSubmit }) => {
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     onSubmit(rules, inputs);
-//   };  
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       <div>
-//         <h3>Rules</h3>
-//         {rules.map((rule,index) => (
-//           <RuleField
-//             key={index}
-//             index={index}
-//             condition={rule.condition}
-//             consequence={rule.consequence}
-//             alternative={rule.alternative}
-//             onChange={onRuleChange}
-//           />
-//         ))}
-//         <button type="button" onClick={() => onRuleChange([...rules, { condition: '', consequence: '', alternative: '' }])}>
-//           +
-//         </button>
-//       </div>
-//       <div>
-//         <h3>Inputs</h3>
-//         {
-//         inputs.map((input,index) => (
-//           <InputField
-//             key={index}
-//             index={index}
-//             inputVariable={input.inputVariable}
-//             inputValue={input.inputValue}
-//             onChange={onInputChange}
-//           />
-//         ))}
-//         <button type="button" onClick={() => onInputChange([...inputs, { inputVariable:'',inputValue: '' }])}>
-//           +
-//         </button>
-//       </div>
-//       <button type="submit">Submit</button>
-//     </form>
-//   );
-// };
-
-// const App = () => {
-//   const [rules,setRules] = React.useState([ {condition: '', consequence: '', alternative: '' }]);
-//   var [inputs,setInputs] = React.useState([{inputVariable:'',inputValue: ''}]);
-
-
-//   const handleSubmit = (event) => {
-//     console.log(event);
-//     onSubmit(rules, inputs);
-//   };
-//   return (
-//     <div>
-//       <Form 
-//         rules={rules} 
-//         inputs={inputs} 
-//         onRuleChange={setRules} 
-//         onInputChange={setInputs} 
-//         onSubmit={handleSubmit}
-//       />
-//     </div>
-//   );
-// };
-
+  const ruleReducer = (rule,action) => {
+    switch(action.type){
+      case 'condition':{
+        return {condition:action.payload,consequence:rule.consequence,alternative:rule.alternative};
+      }
+      case 'consequence':{
+        return {condition:rule.condition,consequence:action.payload,alternative:rule.alternative};
+      }
+      case 'alternative':{
+        return {condition:rule.condition,consequence:rule.consequence,alternative:action.payload};
+      }
+      default:
+        throw new Error(`Error with Rule Reducer: action.type=${action.type} action.payload=${action.payload}`);
+    }
+  }
+  const inputReducer = (input,action) => {
+    switch(action.type){
+      case 'inputVariable':
+        return {inputVariable:action.payload,inputValue:input.inputValue};
+      case 'inputValue':
+        return {inputVariable:input.inputVariable,inputValue:action.payload};
+      default:
+        throw new Error(`Error with Input Reducer: action.type=${action.type} action.payload=${action.payload}`);
+    }
+  }
+  const [rule,dispatchRule] = React.useReducer(ruleReducer,initialRuleState);
+  const [input,dispatchInput] = React.useReducer(inputReducer,initialInputState);
+  return(
+    <Form
+      rule={rule}
+      input={input}
+      onRuleChange={dispatchRule}
+      onInputChange={dispatchInput}
+    />
+  )
+ 
+}
 export default App;
