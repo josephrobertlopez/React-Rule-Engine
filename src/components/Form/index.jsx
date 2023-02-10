@@ -7,26 +7,20 @@ const RuleField = ({ onChange }) => (
   </div>
 );
 
-const Form = ({rule,formData, onRuleChange, onFormSubmit}) => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    onFormSubmit({condition:rule.condition,consequence:rule.consequence,alternative:rule.alternative});
-    localStorage.setItem('rule',JSON.stringify(formData));
+const Form = ({rule, onRuleChange, onFormSubmit}) => {
+  const handleSubmit = async (event) => {
+    const tmpFormData = {condition:rule.condition,consequence:rule.consequence,alternative:rule.alternative};
+    event.preventDefault(tmpFormData);
+    onFormSubmit(tmpFormData);
+    localStorage.setItem('rule',JSON.stringify(tmpFormData));
   
-    fetch('http://localhost:3000/rule', {
+    await fetch('http://localhost:3000/rule', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(formData),
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-    })
-    .catch(error => {
-      console.error(error);
-    });
+      body: JSON.stringify(tmpFormData),
+    }); 
   };
    return(
     <form onSubmit={handleSubmit}>
