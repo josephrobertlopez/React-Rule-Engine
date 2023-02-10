@@ -1,44 +1,54 @@
-import * as React from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-
-const Rule = ({ rule: { condition, consequence, alternative }, inputs }) => (
-  <ErrorBoundary fallback={FallbackComponent}>
-    {parseAndEvaluateRule(condition, consequence, alternative, inputs)}
-  </ErrorBoundary>
-);
-
-const FallbackComponent = ({ error }) => (
-  <div>Error in rendering rule: {error.message}</div>
-);
-
-const parseAndEvaluateRule = (condition, consequence, alternative, inputs) => {
+const Rule = ({rule: {condition, consequence, alternative}, inputs}) => {
   try {
-    const parsedCondition = parseExpression(condition, inputs);
-    const parsedConsequence = parseExpression(consequence, inputs);
-    const parsedAlternative = parseExpression(alternative, inputs);
-    const evaluatedCondition = evaluateExpression(parsedCondition, inputs);
-
-    return evaluatedCondition ? parsedConsequence : parsedAlternative;
-  } catch (error) {
-    throw new Error(`Error rendering Rule: ${error.message}`);
+    condition = parseExpression(condition,inputs);
+  } catch(error){
+    console.log(error);
   }
+  try{
+    consequence = parseExpression(consequence,inputs);
+  }catch(error){
+    console.log(error);
+  }
+  try{
+    alternative = parseExpression(alternative,inputs);
+  }catch(error){
+    console.log(error);
+  }
+  //Evaluate condition then select consequence or alternative
+  let output = "";
+  try{
+    output = evaluateExpression(condition) ? consequence : alternative;
+  }catch(error){
+    console.log(error);
+  }
+  return <>{output}</>
 };
 
 const parseExpression = (expression, inputs) => {
   // Replace input references with actual values
   for (const key in inputs) {
-    expression = expression.replace(new RegExp(`inputs.${key}`, 'g'), inputs[key]);
+    expression = expression.replace(`inputs.${key}`, inputs[key]);
   }
   return expression;
 };
 
-const evaluateExpression = (expression, inputs) => {
+const evaluateExpression = (expression) => {
+  // Only allow arithmetic inequalites 
+  const allowedChars = ['.',' ','0','1','2','3','4','5','6','7','8','9','+','-','*','/','<','=','>'];
   try {
-    const evaluate = new Function(...Object.keys(inputs), `return ${expression}`);
-    return evaluate(...Object.values(inputs));
+    for (let i = 0; i < expression.length; i++) {
+      if (!allowedChars.includes(expression[i])) {
+        console.log(expression);
+        throw new Error("Invalid Expression");
+      }
+    }
+
+    const evaluate = new Function(`return ${expression}`);
+    const result = evaluate();
+    return result > 0;
   } catch (error) {
     throw new Error(`Error evaluating expression: ${error.message}`);
   }
 };
 
-export { Rule };
+export {Rule};
