@@ -18,7 +18,7 @@ const Form = ({rule,formData, onRuleChange, onFormSubmit}) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({string:"Hello world"}),
+      body: JSON.stringify(formData),
     })
     .then(res => res.json())
     .then(data => {
