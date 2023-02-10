@@ -25,7 +25,6 @@ const App = () => {
   return(
     <Form
       rule={rule}
-      formData={formData}
       onRuleChange={dispatchRule}
       onFormSubmit={setFormData}
     />
