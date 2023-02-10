@@ -8,10 +8,25 @@ const RuleField = ({ onChange }) => (
 );
 
 const Form = ({rule,formData, onRuleChange, onFormSubmit}) => {
-   const handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     onFormSubmit({condition:rule.condition,consequence:rule.consequence,alternative:rule.alternative});
-    localStorage.setItem('rule',JSON.stringify({condition:rule.condition,consequence:rule.consequence,alternative:rule.alternative}));
+    localStorage.setItem('rule',JSON.stringify(formData));
+  
+    fetch('http://localhost:3000/rule', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({string:"Hello world"}),
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
   };
    return(
     <form onSubmit={handleSubmit}>
