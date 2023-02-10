@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Ruleset } from "../components/Ruleset";
 import {Rule} from "../components/Rule";
+import { render } from 'react-dom';
 
 const RuleField = ({ onChange }) => (
   <div>
@@ -17,18 +18,13 @@ const InputField = ({ onChange }) => (
   </div>
 );
 const Form = ({rule,input,onRuleChange, onInputChange}) => {
+   const [formData,setFormData] = React.useState(null);
    const handleSubmit = (event) => {
     event.preventDefault();
     let tmpInput = {};
     tmpInput[input.inputVariable] = input.inputValue;
-    console.log("Submit!");
-    console.log(
-      <Rule
-        rule={rule}
-        inputs={tmpInput}
-      />
-    )
-    
+    setFormData({condition:rule.condition,consequence:rule.consequence,alternative:rule.alternative});
+    localStorage.setItem('rule',JSON.stringify(formData));
   };
    return(
     <form onSubmit={handleSubmit}>
