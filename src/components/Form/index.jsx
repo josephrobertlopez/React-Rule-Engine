@@ -1,4 +1,5 @@
-
+import * as React from 'react';
+import {IsValidRuleSyntax} from '../Parser';
 const RuleField = ({ onChange }) => (
   <div>
     <input type="text" placeholder="condition"  onChange={(event) => {onChange({type:'condition',payload:event.target.value})}} />
@@ -7,12 +8,15 @@ const RuleField = ({ onChange }) => (
   </div>
 );
 
-
 const Form = ({rule, onRuleChange, onFormSubmit}) => {
+  const isValid = IsValidRuleSyntax({condition: rule.condition});
+
   const handleSubmit = async (event) => {
-    if(!isValidRule(rule.condition)){
+    if (isValid.props.children == "false") {
       console.log("INVALID ATTEMPT");
-    };
+      return;
+    }
+    localStorage.setItem("value",JSON.stringify(isValid.props.children))
     const tmpFormData = {condition:rule.condition,consequence:rule.consequence,alternative:rule.alternative};
     event.preventDefault(tmpFormData);
     onFormSubmit(tmpFormData);
@@ -36,10 +40,18 @@ const Form = ({rule, onRuleChange, onFormSubmit}) => {
           consequence={rule.consequence}
           alternative={rule.alternative}
         />
+        <h5>Rule is Valid: 
+          <IsValidRuleSyntax
+            condition={rule.condition}
+          /> 
+        </h5>
+        
       <button type="submit">Submit</button>
+
       </div>
     </form>
      
   )
 };
+
 export {Form};
