@@ -46,7 +46,7 @@ const Form = ({rule, onRuleChange, onFormSubmit}) => {
           /> 
         </h5>
         
-      <button type="submit">Submit</button>
+      <button type="submit" disabled={isValid.props.children=="false"}>Submit</button>
 
       </div>
     </form>
