@@ -19,26 +19,25 @@ const IsValidRuleSyntax = ({condition}) => {
     }
     
     if(!containsComparisonSign){
-      console.log("Condition does not contain a comparison sign");
       toReturn = <>false</>;
     }
   
     // Split the string into left-hand side and right-hand side based on the comparison sign
     const parts = condition.split(comparisonSign[i]);
     if (parts.length !== 2) {
-      console.log("Condition does not contain only one comparison sign");
       toReturn = <>false</>;
     }
     i = 0;
     // loop thru logic for LHS & RHS
     for(i; i<2; ++i){
       if(alphabetRegex.test(parts[i]) && !allowableVariablesRegex.test(parts[i])){
-        console.log(`Side ${1+i} is invalid`);
         toReturn = <>false</>;
       }
       if(invalidSpecialCharsRegex.test(parts[i])){
-        console.log(`Side ${1+i} contains invalid special characters`);
         toReturn = <>false</>;
+      }
+      if(/^\s*$/g.test(parts[i]) || /[\+\\\-\*]\s+$/g.test(parts[i]) || /^\s*[\+\\\-\*]/g.test(parts[i])){
+        toReturn = <>false</>;    
       }
     }
     return toReturn;
