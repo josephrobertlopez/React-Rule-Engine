@@ -6,17 +6,24 @@ const RuleField = ({ onChange }) => (
     <input type="text" placeholder="alternative" onChange={(event) => {onChange({type:'alternative',payload:event.target.value})}}/>
   </div>
 );
-const isValidRule = (condition) => {
-  const comparisonSign = ['<=','>=','==','<','>'];
+const isValidRuleSyntax = (condition) => {
+  var comparisonSign = ['<=','>=','==','<','>'];
   // Check if the string contains a comparison sign
   var containsComparisonSign = false;
+
+  var alphabetRegex = /[a-zA-Z]/g
+  var allowableVariablesRegex = /inputs\.[a-zA-Z][a-zA-Z0-9]*/;
+  var invalidSpecialCharsRegex= /[!@#$%^&_\=\[\]{};':"\\|,<>?]+/;
+
   let i = 0;
+  // Find first instance of a comparison sign
   for(i; i<comparisonSign.length; ++i){
     if (condition.indexOf(comparisonSign[i]) !== -1){
       containsComparisonSign = true;
       break;
     }
   }
+  
   if(!containsComparisonSign){
     console.log("Condition does not contain a comparison sign");
     return false;
@@ -28,32 +35,21 @@ const isValidRule = (condition) => {
     console.log("Condition does not contain only one comparison sign");
     return false;
   }
-  var allowableregex = /inputs\.[a-zA-Z][a-zA-Z0-9]*/;
-  var invalidSpecialChars= /[!@#$%^&_\=\[\]{};':"\\|,<>?]+/;
-
-  if(/[a-zA-Z]/g.test(parts[0])){
-    if(!allowableregex.test(parts[0])){
-      console.log("lhs contains invalid input");
+  i = 0;
+  // loop thru logic for LHS & RHS
+  for(i; i<2; ++i){
+    if(alphabetRegex.test(parts[i]) && !allowableVariablesRegex.test(parts[i])){
+      console.log(`Side ${1+i} is invalid`);
       return false;
     }
-  }
- if(invalidSpecialChars.test(parts[0])){
-    console.log("lhs contains invalid specialChars");
-    return false;
- } 
-  if(/[a-zA-Z]/g.test(parts[1])){
-    if(!allowableregex.test(parts[1])){
-          console.log("rhs contains invalid input");
-
+    if(invalidSpecialCharsRegex.test(parts[i])){
+      console.log(`Side ${1+i} contains invalid special characters`);
       return false;
     }
-  }
-  if(invalidSpecialChars.test(parts[1])){
-  	console.log("rhs contains invalid special chars");
-    return false;
   }
   return true;
 };
+
 
 const Form = ({rule, onRuleChange, onFormSubmit}) => {
   const handleSubmit = async (event) => {
