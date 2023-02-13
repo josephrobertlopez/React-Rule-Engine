@@ -19,7 +19,7 @@ describe("Rule Parser", () => {
     });
     it('Invalid Rule Syntax', () => {
         // ["x","1","inputs.x",
-        let invalidConditions = ["inputs == inputs", "inputs.x +=1", "inputs.x != inputs.x", "1 + 1", " 2 > 3 > 4"];
+        let invalidConditions = ["inputs == inputs", "inputs.x +=1", "inputs.x != inputs.x", "1 + 1", " 2 > 3 > 4"," == ", "+== +"];
         let errorMsgs = ["Error: Condition does not contain a comparison sign","Error: Condition does not contain a comparison sign","Error: Condition does not contain a comparison sign"]
         for(var i = 0; i<invalidConditions.length; ++i){
             render(<IsValidRuleSyntax condition={invalidConditions[i]}/>);
