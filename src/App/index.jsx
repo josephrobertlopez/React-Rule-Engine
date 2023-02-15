@@ -4,21 +4,22 @@ const App = () => {
 
   const initialRuleState = {condition:'',consequence:'',alternative:''};  
 
-  const ruleReducer = (rule,action) => {
+  const ruleReducer = (state,action) => {
     switch(action.type){
       case 'condition':{
-        return {condition:action.payload,consequence:rule.consequence,alternative:rule.alternative};
+        return {...state, condition:action.payload};
       }
       case 'consequence':{
-        return {condition:rule.condition,consequence:action.payload,alternative:rule.alternative};
+        return {...state, consequence:action.payload};
       }
       case 'alternative':{
-        return {condition:rule.condition,consequence:rule.consequence,alternative:action.payload};
+        return {...state,alternative:action.payload};
       }
       default:
         throw new Error(`Error with Rule Reducer: action.type=${action.type} action.payload=${action.payload}`);
     }
   }
+
   const [rule,dispatchRule] = React.useReducer(ruleReducer,initialRuleState);
   const [formData,setFormData] = React.useState(null);
 
